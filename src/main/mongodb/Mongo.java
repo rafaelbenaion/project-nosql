@@ -38,11 +38,11 @@ public class Mongo {
     private String      userName            = "admin";
     private String      passWord            = "admin";
 
-    /* -------------------------------------------------------------------------------------------------------- */
-    /* dropCollection()                                                                                         */
-    /* -------------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de supprimer une collection dans la base de donnees.                               */
-    /* -------------------------------------------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* dropCollection()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer une collection dans la base de donnees.                           */
+    /* ---------------------------------------------------------------------------------------------------- */
 
     public void dropCollection(String nomCollection){
         //Drop a collection
@@ -63,11 +63,11 @@ public class Mongo {
         }
     }
 
-    /* -------------------------------------------------------------------------------------------------------- */
-    /* createCollection()                                                                                       */
-    /* -------------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de creer une collection dans la base de donnees.                                   */
-    /* -------------------------------------------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* createCollection()                                                                                   */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une collection dans la base de donnees.                               */
+    /* ---------------------------------------------------------------------------------------------------- */
 
     public void createCollection(String nomCollection){
 
@@ -76,19 +76,22 @@ public class Mongo {
 
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Mongo()                                                                                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une instance de la classe Mongo.                                      */
+    /* ---------------------------------------------------------------------------------------------------- */
     Mongo(){
 
         // Creating a Mongo client
-
         MongoClient mongoClient = new MongoClient( hostName , port );
 
         // Creating Credentials
-        // RH : Ressources Humaines
         MongoCredential credential;
-        credential = MongoCredential.createCredential(userName, dbName,
-                passWord.toCharArray());
+        credential = MongoCredential.createCredential(userName, dbName, passWord.toCharArray());
         System.out.println("Connected to the database successfully");
         System.out.println("Credentials ::"+ credential);
+
         // Accessing the database
         database = mongoClient.getDatabase(dbName);
 
