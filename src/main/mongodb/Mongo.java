@@ -27,16 +27,14 @@ import java.util.ArrayList;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
 
-
-
 public class Mongo {
 
     private MongoDatabase database;
-    private String      dbName              = "rentalPlatform";
-    private String      hostName            = "localhost";
-    private int         port                = 27017;
-    private String      userName            = "admin";
-    private String      passWord            = "admin";
+    private String        dbName      = "rentalPlatform";
+    private String        hostName    = "localhost";
+    private int           port        = 27017;
+    private String        userName    = "admin";
+    private String        passWord    = "admin";
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* dropCollection()                                                                                     */
@@ -96,5 +94,82 @@ public class Mongo {
         database = mongoClient.getDatabase(dbName);
 
     }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteFromCollection()                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer des instances dans une collection.                                */
+    /* Le parametre filters : permet de passer des conditions de recherche des instances a supprimer.       */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteFromCollection(String nomCollection, Document filters){
+
+        System.out.println("\n\n\n*********** dans deleteFromCollection *****************");
+
+        FindIterable<Document> listInstances;
+        Iterator it;
+        MongoCollection<Document> colInstances=database.getCollection(nomCollection);
+
+        listInstances   = colInstances.find(filters).sort(new Document("_id", 1));
+        it              = listInstances.iterator(); // Getting the iterator
+        this.displayIterator(it, "Dans deleteFromCollection: avant suppression");
+
+        colInstances.deleteMany(filters);
+
+        listInstances   = colInstances.find(filters).sort(new Document("_id", 1));
+        it              = listInstances.iterator(); // Getting the iterator
+        this.displayIterator(it, "Dans deleteFromCollection: Apres suppression");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getInstanceById()                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Get an instance from a collection by its id.                                                         */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void getInstanceById(String nomCollection, Integer id){
+
+        System.out.println("\n\n\n*********** dans getInstanceById *****************");
+
+        MongoCollection<Document> collection = database.getCollection(nomCollection);
+        Document whereQuery                  = new Document();
+
+        whereQuery.put("_id", id );
+
+        FindIterable<Document> listDept=collection.find(whereQuery);
+
+        Iterator it = listDept.iterator();
+        while(it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* insertInstanceCollection()                                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Insérer une instance dans une collection.                                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    // Document instance = new Document("_id", 50).append("dname", "FORMATION").append("loc", "Nice");
+
+    public void insertInstanceCollection(String nomCollection, Document instance){
+        MongoCollection<Document> collection = database.getCollection(nomCollection);
+        collection.insertOne(instance);
+        System.out.println("Document inserted successfully");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* displayIterator()                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Parcours un iterateur et affiche les documents qui s'y trouvent.                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void displayIterator(Iterator it, String message){
+        System.out.println(" \n #### "+ message + " ################################");
+        while(it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
 
 }
