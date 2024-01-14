@@ -25,21 +25,114 @@ import java.util.ArrayList;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
 
-public class User {
+public class User extends Document{
 
-    private String UserCollectionName  = "colUser";
+    private String          collection_name  = "colUser";
+    private Integer         user_id;
+    private String          username;
+    private String          email;
+    private String          password_hash;
+    private Boolean         identity_verified;
+    private String          first_name;
+    private String          last_name;
+    private List<Document>  user_ratings;
+    private List<Document>  search_history;
+    private List<Document>  favorites;
+    private List<Document>  reservations;
+    private List<Document>  user_statistics;
+    Mongo mongo = new Mongo();
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* User()                                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une instance de la classe User.                                       */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    User(Integer id,
+         String  username,
+         String  email,
+         String  password_hash,
+         Boolean identity_verified,
+         String first_name,
+         String last_name,
+         List<Document> user_ratings,
+         List<Document> search_history,
+         List<Document> favorites,
+         List<Document> reservations,
+         List<Document> user_statistics) {
+
+        this.user_id            = id;
+        this.username           = username;
+        this.email              = email;
+        this.password_hash      = password_hash;
+        this.identity_verified  = identity_verified;
+        this.first_name         = first_name;
+        this.last_name          = last_name;
+        this.user_ratings       = user_ratings;
+        this.search_history     = search_history;
+        this.favorites          = favorites;
+        this.reservations       = reservations;
+        this.user_statistics    = user_statistics;
+
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* NewUser()                                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une instance de la classe User.                                       */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void insertUser() {
+
+        Document newuser = new Document(
+                         "_id",                 this.user_id)
+                .append ("nom",                 this.username)
+                .append("username",             this.username)
+                .append("email",                this.email)
+                .append("password_hash",        this.password_hash)
+                .append("identity_verified",    this.identity_verified)
+                .append("first_name",           this.first_name)
+                .append("last_name",            this.last_name)
+                .append("user_ratings",         "")
+                .append("search_history",       "")
+                .append("favorites",            "")
+                .append("reservations",         "")
+                .append("user_statistics",      "");
+
+        mongo.insertInstanceCollection(this.collection_name, newuser);
+        System.out.println("Document inserted successfully");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Testing functions                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
     public static void main(String[] args) {
 
-        System.out.println("Hello world!");
+        System.out.println("Testing User classes!");
 
         Mongo mongo = new Mongo();
-        User user   = new User();
 
-        mongo.dropCollection(user.UserCollectionName);
-        mongo.createCollection(user.UserCollectionName);
+        // Create a new user only for testing
+        User user = new User(3,
+                             "rafaelbaptista",
+                             "rafael@icloud.com",
+                             "motdepasse123",
+                             true,
+                             "Rafael",
+                             "Baptista",
+                             new ArrayList<Document>(),
+                             new ArrayList<Document>(),
+                             new ArrayList<Document>(),
+                             new ArrayList<Document>(),
+                             new ArrayList<Document>());
 
+        //mongo.dropCollection(user.collection_name);
+        //mongo.createCollection(user.collection_name);
 
+        //user.insertUser();
+        //mongo.deleteFromCollection(user.collection_name, user);
+
+        mongo.getInstanceById(user.collection_name, user.user_id);
     }
 
 }

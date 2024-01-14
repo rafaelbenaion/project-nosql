@@ -37,44 +37,6 @@ public class Mongo {
     private String        passWord    = "admin";
 
     /* ---------------------------------------------------------------------------------------------------- */
-    /* dropCollection()                                                                                     */
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de supprimer une collection dans la base de donnees.                           */
-    /* ---------------------------------------------------------------------------------------------------- */
-
-    public void dropCollection(String nomCollection){
-        //Drop a collection
-        MongoCollection<Document> colDepts=null;
-        System.out.println("\n\n\n*********** dans dropCollectionDept *****************");
-
-        System.out.println("!!!! Collection Dept : "+colDepts);
-
-        colDepts=database.getCollection(nomCollection);
-        System.out.println("!!!! Collection Dept : "+colDepts);
-        // Visiblement jamais !!!
-        if (colDepts==null)
-            System.out.println("Collection inexistante");
-        else {
-            colDepts.drop();
-            System.out.println("Collection colDepts removed successfully !!!");
-
-        }
-    }
-
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* createCollection()                                                                                   */
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de creer une collection dans la base de donnees.                               */
-    /* ---------------------------------------------------------------------------------------------------- */
-
-    public void createCollection(String nomCollection){
-
-        database.createCollection(nomCollection);
-        System.out.println("Collection " + nomCollection + " created successfully");
-
-    }
-
-    /* ---------------------------------------------------------------------------------------------------- */
     /* Mongo()                                                                                              */
     /* ---------------------------------------------------------------------------------------------------- */
     /* Cette fonction permet de creer une instance de la classe Mongo.                                      */
@@ -92,6 +54,19 @@ public class Mongo {
 
         // Accessing the database
         database = mongoClient.getDatabase(dbName);
+
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* createCollection()                                                                                   */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une collection dans la base de donnees.                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void createCollection(String nomCollection){
+
+        database.createCollection(nomCollection);
+        System.out.println("Collection " + nomCollection + " created successfully");
 
     }
 
@@ -122,6 +97,45 @@ public class Mongo {
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* dropCollection()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer une collection dans la base de donnees.                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void dropCollection(String nomCollection){
+        //Drop a collection
+        MongoCollection<Document> colDepts=null;
+        System.out.println("\n\n\n*********** dans dropCollectionDept *****************");
+
+        System.out.println("!!!! Collection Dept : "+colDepts);
+
+        colDepts=database.getCollection(nomCollection);
+        System.out.println("!!!! Collection Dept : "+colDepts);
+        // Visiblement jamais !!!
+        if (colDepts==null)
+            System.out.println("Collection inexistante");
+        else {
+            colDepts.drop();
+            System.out.println("Collection colDepts removed successfully !!!");
+
+        }
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* insertInstanceCollection()                                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Insérer une instance dans une collection.                                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    // Document instance = new Document("_id", 50).append("dname", "FORMATION").append("loc", "Nice");
+
+    public void insertInstanceCollection(String nomCollection, Document instance){
+        MongoCollection<Document> collection = database.getCollection(nomCollection);
+        collection.insertOne(instance);
+        System.out.println("Document inserted successfully");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* getInstanceById()                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
     /* Get an instance from a collection by its id.                                                         */
@@ -142,20 +156,6 @@ public class Mongo {
         while(it.hasNext()) {
             System.out.println(it.next());
         }
-    }
-
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* insertInstanceCollection()                                                                           */
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* Insérer une instance dans une collection.                                                            */
-    /* ---------------------------------------------------------------------------------------------------- */
-
-    // Document instance = new Document("_id", 50).append("dname", "FORMATION").append("loc", "Nice");
-
-    public void insertInstanceCollection(String nomCollection, Document instance){
-        MongoCollection<Document> collection = database.getCollection(nomCollection);
-        collection.insertOne(instance);
-        System.out.println("Document inserted successfully");
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
