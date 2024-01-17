@@ -17,18 +17,18 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DB;
 import org.bson.Document;
-import java.util.Arrays;
-import java.util.List;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import com.mongodb.client.FindIterable;
-import java.util.Iterator;
-import java.util.ArrayList;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
 
 public class User extends Document{
 
     private       String          collection_name  = "colUser";
-    private final Integer         user_id;
+    private       Integer         user_id;
     private       String          username;
     private       String          email;
     private       String          password_hash;
@@ -72,12 +72,6 @@ public class User extends Document{
         this.reservations       = reservations;
         this.user_statistics    = user_statistics;
 
-        /* ------------------------------------------------------------------------------------------------ */
-        /* Defining User ID                                                                                 */
-        /* ------------------------------------------------------------------------------------------------ */
-
-        this.user_id = mongo.getLastId(this.collection_name) + 1;
-
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
@@ -87,6 +81,12 @@ public class User extends Document{
     /* ---------------------------------------------------------------------------------------------------- */
 
     public void insertUser() {
+
+        /* ------------------------------------------------------------------------------------------------ */
+        /* Defining User ID                                                                                 */
+        /* ------------------------------------------------------------------------------------------------ */
+
+        this.user_id = mongo.getLastId(this.collection_name) + 1;
 
         Document newuser = new Document(
                          "_id",                 this.user_id)
@@ -159,6 +159,137 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* addRating()                                                                                          */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'ajouter un nouveau rating pour un utilisateur.                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /*    "user_ratings": [                                                                                 */
+    /*     {                                                                                                */
+    /*       "rater_id": 12,                                                                                */
+    /*       "rating": 5,                                                                                   */
+    /*       "comment": "It works."                                                                         */
+    /*     }                                                                                                */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void addRating(Integer user_id, Integer grade, String comment) {
+
+        Document rating = new Document()
+                .append("rater_id", user_id)
+                .append("rating",   grade)
+                .append("comment",  comment);
+
+        this.updateUsers(
+                new Document("_id", user_id),
+                new Document("$push", new Document("user_ratings", rating)),
+                new UpdateOptions());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* addSearchHistory()                                                                                   */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'ajouter une nouvelle recherche pour un utilisateur.                          */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /*    "search_history": [                                                                               */
+    /*     {                                                                                                */
+    /*       "query": "Un four.",                                                                           */
+    /*       "timestamp": "2015-11-10T12:15:01Z"                                                            */
+    /*     }                                                                                                */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void addSearchHistory(Integer user_id, String query) {
+
+        // Recuperer la date actuelle
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        Document search_history = new Document()
+                .append("query", query)
+                .append("timestamp",  date);
+
+        this.updateUsers(
+                new Document("_id", user_id),
+                new Document("$push", new Document("search_history", search_history)),
+                new UpdateOptions());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* addFavorite()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'ajouter un nouveau favori pour un utilisateur.                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /*    "favorites": [                                                                                    */
+    /*     {                                                                                                */
+    /*       "goods_id": 451,                                                                               */
+    /*       "favorited_at": "2015-11-10T12:15:01Z"                                                         */
+    /*     }                                                                                                */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void addFavorite(Integer user_id, Integer goods_id) {
+
+        // Recuperer la date actuelle
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        Document favorite = new Document()
+                .append("goods_id", goods_id)
+                .append("favorited_at",  date);
+
+        this.updateUsers(
+                new Document("_id", user_id),
+                new Document("$push", new Document("favorites", favorite)),
+                new UpdateOptions());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* addStatistic()                                                                                       */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'ajouter une nouvelle statistique pour un utilisateur.                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /*    "user_statistics": [                                                                              */
+    /*      {                                                                                               */
+    /*        "stat_name": "Nb_reservations",                                                               */
+    /*        "stat_value": 5,                                                                              */
+    /*        "total_cost": 24                                                                              */
+    /*      }                                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void addStatistics(Integer user_id, String stat_name, Integer stat_value) {
+
+        Document statistic = new Document()
+                .append("stat_name", stat_name)
+                .append("stat_value",  stat_value);
+
+        this.updateUsers(
+                new Document("_id", user_id),
+                new Document("$push", new Document("user_statistics", statistic)),
+                new UpdateOptions());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* addReservation()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'ajouter une nouvelle reservation pour un utilisateur.                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /*    "reservations": [                                                                                 */
+    /*      {                                                                                               */
+    /*        "goods_id": 316,                                                                              */
+    /*        "period": 5,                                                                                  */
+    /*        "total_cost": 24.12                                                                           */
+    /*      }                                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void addReservation(Integer user_id, Integer goods_id, Integer period, Float total_cost) {
+
+        Document reservation = new Document()
+                .append("goods_id", goods_id)
+                .append("period",  period)
+                .append("total_cost",  total_cost);
+
+        this.updateUsers(
+                new Document("_id", user_id),
+                new Document("$push", new Document("reservations", reservation)),
+                new UpdateOptions());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
@@ -169,9 +300,9 @@ public class User extends Document{
         Mongo mongo = new Mongo();
 
         // Create a new user only for testing
-        User user = new User("marouan",
-                             "marouan@icloud.com",
-                             "marouan123",
+        User user = new User("rafaelbaptista",
+                             "rafael@icloud.com",
+                             "rafael123",
                              true,
                              "Rafael",
                              "Baptista",
@@ -181,25 +312,35 @@ public class User extends Document{
                              new ArrayList<Document>(),
                              new ArrayList<Document>());
 
+
         //mongo.dropCollection(user.collection_name);
         //mongo.createCollection(user.collection_name);
 
         //user.insertUser();
-        //mongo.deleteFromCollection(user.collection_name, user);
+        //user.insertUser();
+        //user.insertUser();
 
-        mongo.getInstanceById(user.collection_name, 3);
-        user.deleteUsers(new Document("_id", 2));
-        user.getAllUsers(new Document(), new Document(), new Document());
+
+        //user.deleteUsers(new Document("_id", 2));
+
+        //mongo.getInstanceById(user.collection_name, 3);
+        //user.deleteUsers(new Document("_id", 2));
+        //user.getAllUsers(new Document(), new Document(), new Document());
 
         /*
         user.updateUsers(
-                new Document("_id", 3),
+                new Document("_id", 10),
                 new Document("$set", new Document("username", "amine")),
                 new UpdateOptions());
-
         */
 
-        //user.deleteUsers(new Document("_id", 2));
+        //user.addRating(4, 12, "It works.");
+        //user.addSearchHistory(11, "Un four.");
+        //user.addFavorite(11, 451);
+        //user.addStatistics(5, "Nb_reservations", 52);
+        //user.addReservation(5, 316, 5, (float) 24.12);
+
+        user.getAllUsers(new Document(), new Document(), new Document());
     }
 
 }
