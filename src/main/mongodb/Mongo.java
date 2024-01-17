@@ -234,24 +234,26 @@ public class Mongo {
     /* ---------------------------------------------------------------------------------------------------- */
     /* deleteInstances()                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de mettre a jour des instances dans une collection.                            */
+    /* Cette fonction permet de supprimer des instances dans une collection.                                */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    public void deleteEmployes(String nomCollection, Document filters){
+    public void deleteInstances(String nomCollection, Document filters){
 
-        System.out.println("\n\n\n*********** dans deleteEmployes *****************");
-        FindIterable<Document> listEmployes;
-        Iterator it;
-        MongoCollection<Document> colEmployes=database.getCollection(nomCollection);
+        System.out.println("\n\n\n*********** dans deleteInstances *****************");
 
-        listEmployes=colEmployes.find(filters).sort(new Document("_id", 1));
-        it = listEmployes.iterator();// Getting the iterator
-        this.displayIterator(it, "Dans deleteEmployes: avant suppression");
+        FindIterable<Document>    listInstances;
+        Iterator                  it;
+        MongoCollection<Document> collection = database.getCollection(nomCollection);
 
-        colEmployes.deleteMany(filters);
-        listEmployes=colEmployes.find(filters).sort(new Document("_id", 1));
-        it = listEmployes.iterator();// Getting the iterator
-        this.displayIterator(it, "Dans deleteEmployes: Apres suppression");
+        listInstances = collection.find(filters).sort(new Document("_id", 1));
+        it            = listInstances.iterator(); // Getting the iterator
+        this.displayIterator(it, "Dans deleteInstances: avant suppression");
+
+        collection.deleteMany(filters);
+
+        listInstances = collection.find(filters).sort(new Document("_id", 1));
+        it            = listInstances.iterator(); // Getting the iterator
+        this.displayIterator(it, "Dans deleteInstances: Apres suppression");
     }
 
     /* ---------------------------------------------------------------------------------------------------- */

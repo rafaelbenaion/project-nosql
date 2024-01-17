@@ -97,13 +97,15 @@ public class User extends Document{
                 .append("identity_verified",    this.identity_verified)
                 .append("first_name",           this.first_name)
                 .append("last_name",            this.last_name)
-                .append("user_ratings",         "")
-                .append("search_history",       "")
-                .append("favorites",            "")
-                .append("reservations",         "")
-                .append("user_statistics",      "");
+                .append("user_ratings",         this.user_ratings)
+                .append("search_history",       this.search_history)
+                .append("favorites",            this.favorites)
+                .append("reservations",         this.reservations)
+                .append("user_statistics",      this.user_statistics);
 
-        newuser.append("user_ratings", this.user_ratings);
+        //newuser.append("user_ratings", this.user_ratings);
+
+        // Il manque gérer l'insertion des listes
 
         mongo.insertInstanceCollection(this.collection_name, newuser);
         System.out.println("Document inserted successfully");
@@ -147,6 +149,16 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteUsers()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer un ou plusieurs utilisateurs.                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteUsers(Document whereQuery) {
+        mongo.deleteFromCollection(this.collection_name, whereQuery);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
@@ -176,7 +188,7 @@ public class User extends Document{
         //mongo.deleteFromCollection(user.collection_name, user);
 
         mongo.getInstanceById(user.collection_name, 3);
-
+        user.deleteUsers(new Document("_id", 2));
         user.getAllUsers(new Document(), new Document(), new Document());
 
         /*
@@ -186,6 +198,8 @@ public class User extends Document{
                 new UpdateOptions());
 
         */
+
+        //user.deleteUsers(new Document("_id", 2));
     }
 
 }
