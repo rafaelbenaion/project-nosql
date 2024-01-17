@@ -26,6 +26,9 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
+import org.bson.types.ObjectId;
+
+import static com.mongodb.client.model.Sorts.descending;
 
 public class Mongo {
 
@@ -156,6 +159,57 @@ public class Mongo {
         while(it.hasNext()) {
             System.out.println(it.next());
         }
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getInstances()                                                                                       */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Get list of instances.                                                                               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void getInstances(String  nomCollection,
+                            Document whereQuery,
+                            Document projectionFields,
+                            Document sortFields){
+
+        System.out.println("\n\n\n*********** dans getInstances *****************");
+
+        MongoCollection<Document>  collection    = database.getCollection(nomCollection);
+        FindIterable<Document>     listInstances = collection.find(whereQuery)
+                                                             .sort(sortFields)
+                                                             .projection(projectionFields);
+
+        // Getting the iterator
+        Iterator it = listInstances.iterator();
+        while(it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getLastId()                                                                                          */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Get the last id of a collection.                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public int getLastId(String nomCollection){
+
+        System.out.println("\n\n\n*********** dans getLastId *****************");
+
+        MongoCollection<Document> collection    = database.getCollection(nomCollection);
+        FindIterable<Document>    listInstances = collection.find().sort(descending("_id")).limit(1);
+
+        Document lastInsertedDocument = listInstances.first();
+
+   //     ObjectId id = listInstances.first().getObjectId("_id");
+
+
+        if (listInstances.first() != null) {
+            return (int) lastInsertedDocument.get("_id");
+        } else {
+            return 0;
+        }
+
     }
 
     /* ---------------------------------------------------------------------------------------------------- */

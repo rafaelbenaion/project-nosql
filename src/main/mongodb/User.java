@@ -27,19 +27,19 @@ import com.mongodb.client.model.UpdateOptions;
 
 public class User extends Document{
 
-    private String          collection_name  = "colUser";
-    private Integer         user_id;
-    private String          username;
-    private String          email;
-    private String          password_hash;
-    private Boolean         identity_verified;
-    private String          first_name;
-    private String          last_name;
-    private List<Document>  user_ratings;
-    private List<Document>  search_history;
-    private List<Document>  favorites;
-    private List<Document>  reservations;
-    private List<Document>  user_statistics;
+    private       String          collection_name  = "colUser";
+    private final Integer         user_id;
+    private       String          username;
+    private       String          email;
+    private       String          password_hash;
+    private       Boolean         identity_verified;
+    private       String          first_name;
+    private       String          last_name;
+    private       List<Document>  user_ratings;
+    private       List<Document>  search_history;
+    private       List<Document>  favorites;
+    private       List<Document>  reservations;
+    private       List<Document>  user_statistics;
     Mongo mongo = new Mongo();
 
     /* ---------------------------------------------------------------------------------------------------- */
@@ -48,8 +48,7 @@ public class User extends Document{
     /* Cette fonction permet de creer une instance de la classe User.                                       */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    User(Integer id,
-         String  username,
+    User(String  username,
          String  email,
          String  password_hash,
          Boolean identity_verified,
@@ -61,7 +60,6 @@ public class User extends Document{
          List<Document> reservations,
          List<Document> user_statistics) {
 
-        this.user_id            = id;
         this.username           = username;
         this.email              = email;
         this.password_hash      = password_hash;
@@ -74,12 +72,18 @@ public class User extends Document{
         this.reservations       = reservations;
         this.user_statistics    = user_statistics;
 
+        /* ------------------------------------------------------------------------------------------------ */
+        /* Defining User ID                                                                                 */
+        /* ------------------------------------------------------------------------------------------------ */
+
+        this.user_id = mongo.getLastId(this.collection_name) + 1;
+
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
-    /* NewUser()                                                                                               */
+    /* insertUser()                                                                                         */
     /* ---------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet de creer une instance de la classe User.                                       */
+    /* Cette fonction permet d'inserer un User dans la base         .                                       */
     /* ---------------------------------------------------------------------------------------------------- */
 
     public void insertUser() {
@@ -99,13 +103,40 @@ public class User extends Document{
                 .append("reservations",         "")
                 .append("user_statistics",      "");
 
+        newuser.append("user_ratings", this.user_ratings);
+
         mongo.insertInstanceCollection(this.collection_name, newuser);
         System.out.println("Document inserted successfully");
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* getAllUsers()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de recuperer tous les utilisateurs.                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void getAllUsers(Document whereQuery,
+                            Document projectionFields,
+                            Document sortFields) {
+
+        mongo.getInstances(this.collection_name, whereQuery, projectionFields, sortFields);
+
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getUserById()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de recuperer tous les utilisateurs.                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void getUserById(Integer id) {
+        mongo.getInstanceById(this.collection_name, id);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
+
     public static void main(String[] args) {
 
         System.out.println("Testing User classes!");
@@ -113,10 +144,9 @@ public class User extends Document{
         Mongo mongo = new Mongo();
 
         // Create a new user only for testing
-        User user = new User(3,
-                             "rafaelbaptista",
-                             "rafael@icloud.com",
-                             "motdepasse123",
+        User user = new User("marouan",
+                             "marouan@icloud.com",
+                             "marouan123",
                              true,
                              "Rafael",
                              "Baptista",
@@ -133,6 +163,8 @@ public class User extends Document{
         //mongo.deleteFromCollection(user.collection_name, user);
 
         mongo.getInstanceById(user.collection_name, user.user_id);
+
+        user.getAllUsers(new Document(), new Document(), new Document());
     }
 
 }
