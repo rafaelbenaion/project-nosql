@@ -201,15 +201,57 @@ public class Mongo {
 
         Document lastInsertedDocument = listInstances.first();
 
-   //     ObjectId id = listInstances.first().getObjectId("_id");
-
+        //  ObjectId id = listInstances.first().getObjectId("_id");
 
         if (listInstances.first() != null) {
             return (int) lastInsertedDocument.get("_id");
         } else {
             return 0;
         }
+    }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* updateInstances()                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de mettre a jour des instances dans une collection.                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void updateInstances(String nomCollection,
+                               Document whereQuery,
+                               Document updateExpressions, UpdateOptions updateOptions){
+
+        MongoCollection<Document>   collection   = database.getCollection(nomCollection);
+        UpdateResult                updateResult = collection.updateMany(whereQuery, updateExpressions);
+
+        System.out.println("\n" +
+                    "Resultat update : "
+                +   "getUpdate id: "       + updateResult
+                +   " getMatchedCount : "  + updateResult.getMatchedCount()
+                +   " getModifiedCount : " + updateResult.getModifiedCount()
+        );
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteInstances()                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de mettre a jour des instances dans une collection.                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteEmployes(String nomCollection, Document filters){
+
+        System.out.println("\n\n\n*********** dans deleteEmployes *****************");
+        FindIterable<Document> listEmployes;
+        Iterator it;
+        MongoCollection<Document> colEmployes=database.getCollection(nomCollection);
+
+        listEmployes=colEmployes.find(filters).sort(new Document("_id", 1));
+        it = listEmployes.iterator();// Getting the iterator
+        this.displayIterator(it, "Dans deleteEmployes: avant suppression");
+
+        colEmployes.deleteMany(filters);
+        listEmployes=colEmployes.find(filters).sort(new Document("_id", 1));
+        it = listEmployes.iterator();// Getting the iterator
+        this.displayIterator(it, "Dans deleteEmployes: Apres suppression");
     }
 
     /* ---------------------------------------------------------------------------------------------------- */

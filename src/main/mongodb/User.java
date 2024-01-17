@@ -134,6 +134,19 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* updateUsers()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de mettre a jour un ou plusieurs utilisateurs.                                 */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void updateUsers(Document whereQuery,
+                            Document updateExpressions,
+                            UpdateOptions updateOptions) {
+
+        mongo.updateInstances(this.collection_name, whereQuery, updateExpressions, updateOptions);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
@@ -162,9 +175,17 @@ public class User extends Document{
         //user.insertUser();
         //mongo.deleteFromCollection(user.collection_name, user);
 
-        mongo.getInstanceById(user.collection_name, user.user_id);
+        mongo.getInstanceById(user.collection_name, 3);
 
         user.getAllUsers(new Document(), new Document(), new Document());
+
+        /*
+        user.updateUsers(
+                new Document("_id", 3),
+                new Document("$set", new Document("username", "amine")),
+                new UpdateOptions());
+
+        */
     }
 
 }
