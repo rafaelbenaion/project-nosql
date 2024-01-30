@@ -27,7 +27,7 @@ import com.mongodb.client.model.UpdateOptions;
 
 public class User extends Document{
 
-    private       String          collection_name  = "colUser";
+    private final String          collection_name  = "colUser";
     private       Integer         user_id;
     private       String          username;
     private       String          email;
@@ -290,6 +290,43 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* getId()                                                                                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de recuperer l'id d'un utilisateur.                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Integer getId(){
+        return this.user_id;
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* newGoods()                                                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer un nouveau bien. Et de l'ajouter a la base de donnees.                */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void newGoods(String title,
+                         String description,
+                         Float price_per_day,
+                         String images_url,
+                         String coordonees_gps,
+                         Boolean availability_status,
+                         Integer category) {
+
+        Good good = new Good(title,
+                             description,
+                             price_per_day,
+                             images_url,
+                             coordonees_gps,
+                             availability_status,
+                             category,
+                             this.user_id);
+
+        good.insertGood();                                        // Insertion du bien dans la base de donnees
+    }
+
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
@@ -300,18 +337,27 @@ public class User extends Document{
         Mongo mongo = new Mongo();
 
         // Create a new user only for testing
-        User user = new User("rafaelbaptista",
-                             "rafael@icloud.com",
-                             "rafael123",
+        User user = new User("laranja",
+                             "laranja@icloud.com",
+                             "laranja123",
                              true,
-                             "Rafael",
-                             "Baptista",
+                             "Laranja",
+                             "Mecanica",
                              new ArrayList<Document>(),
                              new ArrayList<Document>(),
                              new ArrayList<Document>(),
                              new ArrayList<Document>(),
                              new ArrayList<Document>());
 
+        user.insertUser();
+
+        user.newGoods("Four",
+                      "Un four.",
+                      (float) 12.5,
+                      "https://www.google.com/",
+                      "43.615829, 7.071257",
+                      true,
+                      1);
 
         //mongo.dropCollection(user.collection_name);
         //mongo.createCollection(user.collection_name);
