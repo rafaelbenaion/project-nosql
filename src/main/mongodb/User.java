@@ -73,6 +73,8 @@ public class User extends Document{
         this.user_statistics    = user_statistics;
 
     }
+    User() {
+    }
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* insertUser()                                                                                         */
@@ -131,8 +133,24 @@ public class User extends Document{
     /* Cette fonction permet de recuperer tous les utilisateurs.                                            */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    public void getUserById(Integer id) {
-        mongo.getInstanceById(this.collection_name, id);
+    public User getUserById(Integer id) {
+
+        Document user           = mongo.getInstanceById(this.collection_name, id);
+
+        this.user_id            = user.getInteger("_id");
+        this.username           = user.getString("username");
+        this.email              = user.getString("email");
+        this.password_hash      = user.getString("password_hash");
+        this.identity_verified  = user.getBoolean("identity_verified");
+        this.first_name         = user.getString("first_name");
+        this.last_name          = user.getString("last_name");
+        this.user_ratings       = (List<Document>) user.get("user_ratings");
+        this.search_history     = (List<Document>) user.get("search_history");
+        this.favorites          = (List<Document>) user.get("favorites");
+        this.reservations       = (List<Document>) user.get("reservations");
+        this.user_statistics    = (List<Document>) user.get("user_statistics");
+
+        return this;
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
@@ -307,7 +325,7 @@ public class User extends Document{
 
     public void newGoods(String title,
                          String description,
-                         Float price_per_day,
+                         Double price_per_day,
                          String images_url,
                          String coordonees_gps,
                          Boolean availability_status,
@@ -337,6 +355,7 @@ public class User extends Document{
         Mongo mongo = new Mongo();
 
         // Create a new user only for testing
+        /*
         User user = new User("laranja",
                              "laranja@icloud.com",
                              "laranja123",
@@ -349,15 +368,20 @@ public class User extends Document{
                              new ArrayList<Document>(),
                              new ArrayList<Document>());
 
-        user.insertUser();
+         */
 
+        //user.insertUser();
+
+        /*
         user.newGoods("Four",
                       "Un four.",
-                      (float) 12.5,
+                      (double) 12.5,
                       "https://www.google.com/",
                       "43.615829, 7.071257",
                       true,
                       1);
+
+         */
 
         //mongo.dropCollection(user.collection_name);
         //mongo.createCollection(user.collection_name);
@@ -386,7 +410,28 @@ public class User extends Document{
         //user.addStatistics(5, "Nb_reservations", 52);
         //user.addReservation(5, 316, 5, (float) 24.12);
 
-        user.getAllUsers(new Document(), new Document(), new Document());
+        //user.getAllUsers(new Document(), new Document(), new Document());
+
+        //Category sport            = new Category("Sport");
+
+        Category selected_category  = new Category();
+        selected_category           = selected_category.getCategoryById(1);
+
+        User user = new User();
+        user = user.getUserById(12);
+
+
+        user.newGoods("Balle",
+                      "Une balle de volley.",
+                      (double) 8.5,
+                      "https://www.google.com/",
+                      "43.615829, 7.071257",
+                      true,
+                      selected_category.category_id);
+
+
+
+        //System.out.println(user.toJson());
     }
 
 }

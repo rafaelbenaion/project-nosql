@@ -9,24 +9,14 @@ package main.mongodb;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
-import com.mongodb.DBObject;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DB;
-import org.bson.Document;
-import java.util.Arrays;
-import java.util.List;
 import com.mongodb.client.FindIterable;
 import java.util.Iterator;
-import java.util.ArrayList;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
-import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Sorts.descending;
 
@@ -130,8 +120,6 @@ public class Mongo {
     /* Insérer une instance dans une collection.                                                            */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    // Document instance = new Document("_id", 50).append("dname", "FORMATION").append("loc", "Nice");
-
     public void insertInstanceCollection(String nomCollection, Document instance){
         MongoCollection<Document> collection = database.getCollection(nomCollection);
         collection.insertOne(instance);
@@ -144,7 +132,7 @@ public class Mongo {
     /* Get an instance from a collection by its id.                                                         */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    public void getInstanceById(String nomCollection, Integer id){
+    public Document getInstanceById(String nomCollection, Integer id){
 
         System.out.println("\n\n\n*********** dans getInstanceById *****************");
 
@@ -159,6 +147,7 @@ public class Mongo {
         while(it.hasNext()) {
             System.out.println(it.next());
         }
+        return whereQuery;
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
@@ -209,8 +198,6 @@ public class Mongo {
             return 0;
         }
     }
-
-
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* updateInstances()                                                                                    */

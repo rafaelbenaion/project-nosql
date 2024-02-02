@@ -16,7 +16,7 @@ public class Good extends Document{
     private       Integer     goods_id;
     private       String      title;
     private       String      description;
-    private       Float       price_per_day;
+    private       Double      price_per_day;
     private       String      images_url;
     private       String      coordonees_gps;
     private       Boolean     availability_status;
@@ -33,7 +33,7 @@ public class Good extends Document{
 
     public Good(String      title,
                 String      description,
-                Float       price_per_day,
+                Double      price_per_day,
                 String      images_url,
                 String      coordonees_gps,
                 Boolean     availability_status,
@@ -48,6 +48,9 @@ public class Good extends Document{
         this.availability_status = availability_status;
         this.category            = category;
         this.owner               = owner;
+    }
+
+    public Good() {
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
@@ -75,6 +78,47 @@ public class Good extends Document{
                           .append("owner",               this.owner);
 
         mongo.insertInstanceCollection(this.collection_name, good);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteGoods()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer un ou plusieurs goods.                                            */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteGoods(Document whereQuery) {
+        mongo.deleteFromCollection(this.collection_name, whereQuery);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getGoodById()                                                                                        */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Good getGoodById(Integer id) {
+
+        Good good                   = new Good();
+        Document good_doc           = mongo.getInstanceById(this.collection_name, id);
+        good.goods_id               = good_doc.getInteger("_id");
+        good.title                  = good_doc.getString("title");
+        good.description            = good_doc.getString("description");
+        good.price_per_day          = good_doc.getDouble("price_per_day");
+        good.images_url             = good_doc.getString("images_url");
+        good.coordonees_gps         = good_doc.getString("coordonees_gps");
+        good.availability_status    = good_doc.getBoolean("availability_status");
+        good.category               = good_doc.getInteger("category");
+        good.owner                  = good_doc.getInteger("owner");
+
+        return good;
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getPricePerDay()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Double getPricePerDay(Integer id) {
+
+        Document good_doc = mongo.getInstanceById(this.collection_name, id);
+        return good_doc.getDouble("price_per_day");
     }
 
 }
