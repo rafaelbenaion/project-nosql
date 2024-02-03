@@ -133,4 +133,15 @@ public class Good extends Document{
         return this.goods_id;
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* startConversation()                                                                                  */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de démarrer une conversation.                                                  */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void startConversation(Integer client_id) {
+        Conversation conversation = new Conversation(this.owner, client_id, this.goods_id);
+        System.out.println("Conversation started successfully.");
+    }
+
 }

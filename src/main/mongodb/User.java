@@ -370,6 +370,17 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* myConversations()                                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'afficher toutes les conversations d'un utilisateur.                          */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void myConversations() {
+        Conversation conversation = new Conversation();
+        conversation.printAllConversations(this.user_id);
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
@@ -439,11 +450,14 @@ public class User extends Document{
 
         //Category sport            = new Category("Sport");
 
-        Category selected_category  = new Category();
-        selected_category           = selected_category.getCategoryById(1);
+        //Category selected_category  = new Category();
+        //selected_category           = selected_category.getCategoryById(1);
 
         User user   = new User();
-        user        = user.getUserById(12);
+        user        = user.getUserById(9);
+
+        //User user2   = new User();
+        //user2        = user.getUserById(12);
 
         //User user2   = new User();
         //user2        = user.getUserById(9);
@@ -458,19 +472,28 @@ public class User extends Document{
                       selected_category.category_id);
         */
 
-        Good good   = new Good();
-        good        = good.getGoodById(2);
+        //Good good   = new Good();
+        //good        = good.getGoodById(2);
 
-        user.newReservation(good, 3);
+        //user.newReservation(good, 3);
 
-        Reservation my_reservation = new Reservation();
-        my_reservation = my_reservation.getReservationById(1);
-        my_reservation.payReservation();
+        //Reservation my_reservation = new Reservation();
+        //my_reservation = my_reservation.getReservationById(1);
+        //my_reservation.payReservation();
 
         //user.deleteAllReservations();
 
 
         //System.out.println(user.toJson());
+
+        //good.startConversation(user.getId());
+
+        //Conversation my_conversation = new Conversation().getConversationById(2);
+        //my_conversation.insertMessage(user.getId(), "Bonjour, je suis interessé par votre bien.");
+
+        //my_conversation.insertMessage(user2.getId(), "Hello, il n'est plus disponible.");
+
+        user.myConversations();
     }
 
 }

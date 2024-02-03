@@ -36,7 +36,6 @@ public class Conversation {
 
     Conversation(Integer        vendeur,
                  Integer        client,
-                 List<Document> messages,
                  Integer        good_related) {
 
         this.conversation_id = mongo.getLastId(this.collection_name) + 1;               // Nouveau identifiant
@@ -45,6 +44,19 @@ public class Conversation {
         this.messages        = new ArrayList<Document>();
         this.good_related    = good_related;
         this.last_update     = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        /* ------------------------------------------------------------------------------------------------ */
+        /* Insertion de la conversation dans la base de données                                             */
+        /* ------------------------------------------------------------------------------------------------ */
+
+        Document conversation = new Document("_id",this.conversation_id)
+                .append("vendeur",        this.vendeur)
+                .append("client",         this.client)
+                .append("messages",       this.messages)
+                .append("good_related",   this.good_related)
+                .append("last_update",    this.last_update);
+
+        mongo.insertInstanceCollection(this.collection_name, conversation); // Insert conversation in database
     }
     Conversation() {}
 
@@ -103,13 +115,13 @@ public class Conversation {
 
     public void printAllConversations(Integer user_id) {
 
-        System.out.println("Conversations où l'utilisateur " + user_id + " est vendeur :");
+        System.out.println("-------------------Conversations où l'utilisateur " + user_id + " est vendeur :");
         mongo.getInstances(this.collection_name,
                 new Document("vendeur", user_id),
                 new Document(),
                 new Document());
 
-        System.out.println("Conversations où l'utilisateur " + user_id + " est client :");
+        System.out.println("--------------------Conversations où l'utilisateur " + user_id + " est client :");
         mongo.getInstances(this.collection_name,
                 new Document("client", user_id),
                 new Document(),
