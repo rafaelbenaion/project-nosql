@@ -120,4 +120,40 @@ public class Reservation {
         return reservation;
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getAllActiveReservations()                                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de récupérer toutes les réservations actives.                                  */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void getAllActiveReservations() {
+
+        mongo.getInstances(this.collection_name,
+                new Document("reservation_status", "Active"),
+                new Document(),
+                new Document());
+
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* nbOfReservationsForEachCategory()                                                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* sumReservationsCostByUser()                                                                          */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de récupérer le montant total des réservations des utilisateurs.               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void sumReservationsCostByUser() {
+
+        System.out.println("\n\nTotal cost of reservations by user :");
+
+        String groupOperator = "$group";
+        Document groupFields = new Document("_id", "$renter")
+                .append("totalCost", new Document("$sum", "$total_cost"));
+
+        mongo.groupByTotalCost(this.collection_name, groupOperator, groupFields);
+    }
+
 }

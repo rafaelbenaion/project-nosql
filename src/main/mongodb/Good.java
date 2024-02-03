@@ -7,6 +7,7 @@
 
 package main.mongodb;
 
+import com.mongodb.client.MongoCollection;
 import jdk.jfr.Category;
 import org.bson.Document;
 
@@ -142,6 +143,32 @@ public class Good extends Document{
     public void startConversation(Integer client_id) {
         Conversation conversation = new Conversation(this.owner, client_id, this.goods_id);
         System.out.println("Conversation started successfully.");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* printAllGoodsForEachUser()                                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void printAllGoodsForEachUser() {
+
+        System.out.println("\n\nAll goods from each users :");
+
+        mongo.printAllGoodsForEachUser();
+
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* printAllGoodsWithActiveReservationStatus()                                                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'afficher tous les goods avec une réservation actif non payées.               */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void printAllGoodsWithActiveReservationStatus() {
+
+        System.out.println("\n\nAll goods with active reservation not payed :");
+
+        mongo.printActiveReservedGoods();
+
     }
 
 }
