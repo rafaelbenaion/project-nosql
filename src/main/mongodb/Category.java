@@ -63,5 +63,13 @@ public class Category extends Document {
         mongo.deleteFromCollection(this.collection_name, whereQuery);
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getId()                                                                                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Integer getId() {
+        return this.category_id;
+    }
+
 
 }

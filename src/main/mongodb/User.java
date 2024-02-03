@@ -17,10 +17,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DB;
 import org.bson.Document;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.model.UpdateOptions;
@@ -72,26 +70,14 @@ public class User extends Document{
         this.reservations       = reservations;
         this.user_statistics    = user_statistics;
 
-    }
-    User() {
-    }
-
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* insertUser()                                                                                         */
-    /* ---------------------------------------------------------------------------------------------------- */
-    /* Cette fonction permet d'inserer un User dans la base         .                                       */
-    /* ---------------------------------------------------------------------------------------------------- */
-
-    public void insertUser() {
-
         /* ------------------------------------------------------------------------------------------------ */
-        /* Defining User ID                                                                                 */
+        /* Insertion de l'utilisateur dans la base de données                                               */
         /* ------------------------------------------------------------------------------------------------ */
 
         this.user_id = mongo.getLastId(this.collection_name) + 1;
 
         Document newuser = new Document(
-                         "_id",                 this.user_id)
+                "_id",                 this.user_id)
                 .append ("nom",                 this.username)
                 .append("username",             this.username)
                 .append("email",                this.email)
@@ -105,13 +91,13 @@ public class User extends Document{
                 .append("reservations",         this.reservations)
                 .append("user_statistics",      this.user_statistics);
 
-        //newuser.append("user_ratings", this.user_ratings);
-
-        // Il manque gérer l'insertion des listes
-
         mongo.insertInstanceCollection(this.collection_name, newuser);
-        System.out.println("Document inserted successfully");
+        System.out.println("User created successfully!");
+
     }
+    User() {
+    }
+
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* getAllUsers()                                                                                        */
@@ -381,119 +367,28 @@ public class User extends Document{
     }
 
     /* ---------------------------------------------------------------------------------------------------- */
+    /* myReservations()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet d'afficher toutes les reservations d'un utilisateur.                           */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void myReservations() {
+
+        System.out.println("----------------------------------------User " + this.user_id + " reservations:");
+
+        mongo.getInstances(
+                "colReservations",
+                new Document("renter", this.user_id),
+                new Document(),
+                new Document());
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
     /* ---------------------------------------------------------------------------------------------------- */
 
     public static void main(String[] args) {
 
-        System.out.println("Testing User classes!");
-
-        Mongo mongo = new Mongo();
-
-        // Create a new user only for testing
-        /*
-        User user = new User("laranja",
-                             "laranja@icloud.com",
-                             "laranja123",
-                             true,
-                             "Laranja",
-                             "Mecanica",
-                             new ArrayList<Document>(),
-                             new ArrayList<Document>(),
-                             new ArrayList<Document>(),
-                             new ArrayList<Document>(),
-                             new ArrayList<Document>());
-
-         */
-
-        //user.insertUser();
-
-        /*
-        user.newGoods("Four",
-                      "Un four.",
-                      (double) 12.5,
-                      "https://www.google.com/",
-                      "43.615829, 7.071257",
-                      true,
-                      1);
-
-         */
-
-        //mongo.dropCollection(user.collection_name);
-        //mongo.createCollection(user.collection_name);
-
-        //user.insertUser();
-        //user.insertUser();
-        //user.insertUser();
-
-
-        //user.deleteUsers(new Document("_id", 2));
-
-        //mongo.getInstanceById(user.collection_name, 3);
-        //user.deleteUsers(new Document("_id", 2));
-        //user.getAllUsers(new Document(), new Document(), new Document());
-
-        /*
-        user.updateUsers(
-                new Document("_id", 10),
-                new Document("$set", new Document("username", "amine")),
-                new UpdateOptions());
-        */
-
-        //user.addRating(4, 12, "It works.");
-        //user.addSearchHistory(11, "Un four.");
-        //user.addFavorite(11, 451);
-        //user.addStatistics(5, "Nb_reservations", 52);
-        //user.addReservation(5, 316, 5, (float) 24.12);
-
-        //user.getAllUsers(new Document(), new Document(), new Document());
-
-        //Category sport            = new Category("Sport");
-
-        //Category selected_category  = new Category();
-        //selected_category           = selected_category.getCategoryById(1);
-
-        User user   = new User();
-        user        = user.getUserById(9);
-
-        //User user2   = new User();
-        //user2        = user.getUserById(12);
-
-        //User user2   = new User();
-        //user2        = user.getUserById(9);
-
-        /*
-        user.newGoods("Balle",
-                      "Une balle de volley.",
-                      (double) 5,
-                      "https://www.google.com/",
-                      "43.615829, 7.071257",
-                      true,
-                      selected_category.category_id);
-        */
-
-        //Good good   = new Good();
-        //good        = good.getGoodById(2);
-
-        //user.newReservation(good, 3);
-
-        //Reservation my_reservation = new Reservation();
-        //my_reservation = my_reservation.getReservationById(1);
-        //my_reservation.payReservation();
-
-        //user.deleteAllReservations();
-
-
-        //System.out.println(user.toJson());
-
-        //good.startConversation(user.getId());
-
-        //Conversation my_conversation = new Conversation().getConversationById(2);
-        //my_conversation.insertMessage(user.getId(), "Bonjour, je suis interessé par votre bien.");
-
-        //my_conversation.insertMessage(user2.getId(), "Hello, il n'est plus disponible.");
-
-        user.myConversations();
     }
 
 }

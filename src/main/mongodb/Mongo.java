@@ -72,7 +72,7 @@ public class Mongo {
 
     public void deleteFromCollection(String nomCollection, Document filters){
 
-        System.out.println("\n\n\n*********** dans deleteFromCollection *****************");
+        System.out.println("\n*********** dans deleteFromCollection *****************");
 
         FindIterable<Document> listInstances;
         Iterator it;
@@ -98,7 +98,7 @@ public class Mongo {
     public void dropCollection(String nomCollection){
         //Drop a collection
         MongoCollection<Document> colDepts=null;
-        System.out.println("\n\n\n*********** dans dropCollectionDept *****************");
+        System.out.println("\n*********** dans dropCollectionDept *****************");
 
         System.out.println("!!!! Collection Dept : "+colDepts);
 
@@ -134,7 +134,7 @@ public class Mongo {
 
     public Document getInstanceById(String nomCollection, Integer id){
 
-        System.out.println("\n\n\n*********** dans getInstanceById *****************");
+        System.out.println("\n*********** dans getInstanceById *****************");
 
         MongoCollection<Document> collection = database.getCollection(nomCollection);
         Document whereQuery                  = new Document();
@@ -163,7 +163,7 @@ public class Mongo {
                             Document projectionFields,
                             Document sortFields){
 
-        System.out.println("\n\n\n*********** dans getInstances *****************");
+        System.out.println("\n*********** dans getInstances *****************");
 
         MongoCollection<Document>  collection    = database.getCollection(nomCollection);
         FindIterable<Document>     listInstances = collection.find(whereQuery)
@@ -185,7 +185,7 @@ public class Mongo {
 
     public int getLastId(String nomCollection){
 
-        System.out.println("\n\n\n*********** dans getLastId *****************");
+        System.out.println("\n*********** dans getLastId *****************");
 
         MongoCollection<Document> collection    = database.getCollection(nomCollection);
         FindIterable<Document>    listInstances = collection.find().sort(descending("_id")).limit(1);
@@ -230,7 +230,7 @@ public class Mongo {
 
     public void deleteInstances(String nomCollection, Document filters){
 
-        System.out.println("\n\n\n*********** dans deleteInstances *****************");
+        System.out.println("\n*********** dans deleteInstances *****************");
 
         FindIterable<Document>    listInstances;
         Iterator                  it;
