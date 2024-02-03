@@ -85,4 +85,39 @@ public class Reservation {
         mongo.deleteFromCollection(this.collection_name, whereQuery);
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* payReservation()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void payReservation(){
+        Payment payment = new Payment(
+                this.reservation_id,
+                this.renter,
+                this.total_cost,
+                "CB",
+                "PAID");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getReservationById()                                                                                 */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de récupérer une réservation par son identifiant.                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Reservation getReservationById(Integer id) {
+
+        Reservation reservation         = new Reservation();
+        Document reservation_doc        = mongo.getInstanceById(this.collection_name, id);
+
+        reservation.reservation_id      = reservation_doc.getInteger("_id");
+        reservation.renter              = reservation_doc.getInteger("renter");
+        reservation.good_reserved       = new Good().getGoodById(reservation_doc.getInteger("good_reserved"));
+        reservation.rental_period       = reservation_doc.getInteger("rental_period");
+        reservation.total_cost          = reservation_doc.getDouble("total_cost");
+        reservation.reservation_status  = reservation_doc.getString("reservation_status");
+        reservation.created_at          = reservation_doc.getString("created_at");
+
+        return reservation;
+    }
+
 }

@@ -443,7 +443,7 @@ public class User extends Document{
         selected_category           = selected_category.getCategoryById(1);
 
         User user   = new User();
-        user        = user.getUserById(9);
+        user        = user.getUserById(12);
 
         //User user2   = new User();
         //user2        = user.getUserById(9);
@@ -459,13 +459,15 @@ public class User extends Document{
         */
 
         Good good   = new Good();
-        good        = good.getGoodById(4);
+        good        = good.getGoodById(2);
 
+        user.newReservation(good, 3);
 
+        Reservation my_reservation = new Reservation();
+        my_reservation = my_reservation.getReservationById(1);
+        my_reservation.payReservation();
 
-        //user2.newReservation(good, 5);
-
-        user.deleteAllReservations();
+        //user.deleteAllReservations();
 
 
         //System.out.println(user.toJson());
