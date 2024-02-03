@@ -343,6 +343,31 @@ public class User extends Document{
         good.insertGood();                                        // Insertion du bien dans la base de donnees
     }
 
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* newReservation()                                                                                     */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de creer une nouvelle reservation pour un utilisateur.                         */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void newReservation(Good    good,
+                               Integer rental_period) {
+
+        Reservation reservation = new Reservation(this.user_id,
+                                                  good,
+                                                  rental_period,
+                                                  "Active");
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteAllReservations()                                                                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer toutes les reservations de l'utilisateur.                         */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteAllReservations() {
+        Reservation reservation = new Reservation();
+        reservation.deleteReservationsFromUser(this.user_id);
+    }
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* Testing functions                                                                                    */
@@ -417,18 +442,30 @@ public class User extends Document{
         Category selected_category  = new Category();
         selected_category           = selected_category.getCategoryById(1);
 
-        User user = new User();
-        user = user.getUserById(12);
+        User user   = new User();
+        user        = user.getUserById(9);
 
+        //User user2   = new User();
+        //user2        = user.getUserById(9);
 
+        /*
         user.newGoods("Balle",
                       "Une balle de volley.",
-                      (double) 8.5,
+                      (double) 5,
                       "https://www.google.com/",
                       "43.615829, 7.071257",
                       true,
                       selected_category.category_id);
+        */
 
+        Good good   = new Good();
+        good        = good.getGoodById(4);
+
+
+
+        //user2.newReservation(good, 5);
+
+        user.deleteAllReservations();
 
 
         //System.out.println(user.toJson());

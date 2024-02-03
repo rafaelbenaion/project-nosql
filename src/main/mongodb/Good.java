@@ -98,6 +98,7 @@ public class Good extends Document{
 
         Good good                   = new Good();
         Document good_doc           = mongo.getInstanceById(this.collection_name, id);
+
         good.goods_id               = good_doc.getInteger("_id");
         good.title                  = good_doc.getString("title");
         good.description            = good_doc.getString("description");
@@ -108,6 +109,9 @@ public class Good extends Document{
         good.category               = good_doc.getInteger("category");
         good.owner                  = good_doc.getInteger("owner");
 
+        System.out.println("Good found successfully.");
+        System.out.println(good_doc.toJson());
+
         return good;
     }
 
@@ -115,10 +119,18 @@ public class Good extends Document{
     /* getPricePerDay()                                                                                     */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    public Double getPricePerDay(Integer id) {
+    public Double getPricePerDay() {
+        return this.price_per_day;
+    }
 
-        Document good_doc = mongo.getInstanceById(this.collection_name, id);
-        return good_doc.getDouble("price_per_day");
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* getId()                                                                                              */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de récupérer l'identifiant d'un objet Good.                                    */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public Integer getId() {
+        return this.goods_id;
     }
 
 }

@@ -145,7 +145,9 @@ public class Mongo {
 
         Iterator it = listDept.iterator();
         while(it.hasNext()) {
-            System.out.println(it.next());
+            Object next = it.next();
+            System.out.println(next);
+            return (Document) next;
         }
         return whereQuery;
     }

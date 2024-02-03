@@ -10,21 +10,23 @@ package main.mongodb;
 
 import com.mongodb.internal.connection.Time;
 import org.bson.Document;
-
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Reservation {
 
     private final String      collection_name       = "colReservations";
     private       Integer     reservation_id;
     private       Integer     renter;
-    private       Integer     good_reserved;
+    private       Good        good_reserved;
     private       Integer     rental_period;
     private       Double      total_cost;
     private       String      reservation_status;
-    private       Instant     created_at;
+    private       String      created_at;
 
-    Mongo mongo = new Mongo();
+    Mongo mongo                 = new Mongo();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("UTC"));;
 
     /* ---------------------------------------------------------------------------------------------------- */
     /* Reservation()                                                                                        */
@@ -32,8 +34,8 @@ public class Reservation {
     /* Cette fonction permet de creer une instance de la classe Reservation.                                */
     /* ---------------------------------------------------------------------------------------------------- */
 
-    public Reservation(Integer    renter,
-                       Integer     good_reserved,
+    public Reservation(Integer     renter,
+                       Good        good_reserved,
                        Integer     rental_period,
                        String      reservation_status) {
 
@@ -42,15 +44,15 @@ public class Reservation {
         this.good_reserved      = good_reserved;
         this.rental_period      = rental_period;
         this.reservation_status = reservation_status;
-        this.created_at         = Instant.now();
+
+
+        this.created_at         = formatter.format(Instant.now());
 
         /* ------------------------------------------------------------------------------------------------ */
         /* Calcul du prix total de la réservation                                                           */
         /* ------------------------------------------------------------------------------------------------ */
 
-        Good good       = new Good();
-             good       = good.getGoodById(this.good_reserved);
-        this.total_cost = good.getPricePerDay(this.good_reserved) * this.rental_period;
+        this.total_cost = (good_reserved.getPricePerDay() * (double) this.rental_period);
 
         /* ------------------------------------------------------------------------------------------------ */
         /* Insertion de la réservation dans la base de données                                              */
@@ -58,16 +60,29 @@ public class Reservation {
 
         Document reservation = new Document("_id",                  this.reservation_id)
                                     .append("renter",               this.renter)
-                                    .append("good_reserved",        this.good_reserved)
+                                    .append("good_reserved",        this.good_reserved.getId())
                                     .append("rental_period",        this.rental_period)
                                     .append("total_cost",           this.total_cost)
                                     .append("reservation_status",   this.reservation_status)
                                     .append("created_at",           this.created_at);
 
         mongo.insertInstanceCollection(this.collection_name, reservation);           // Sauvegarde reservation
+
+        System.out.println("Reservation created successfully.");
     }
 
     public Reservation() {
+    }
+
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* deleteReservationsFromUser()                                                                         */
+    /* ---------------------------------------------------------------------------------------------------- */
+    /* Cette fonction permet de supprimer une ou plusieurs réservations d'un utilisateur.                   */
+    /* ---------------------------------------------------------------------------------------------------- */
+
+    public void deleteReservationsFromUser(Integer renter_id) {
+        Document whereQuery = new Document("renter", renter_id);
+        mongo.deleteFromCollection(this.collection_name, whereQuery);
     }
 
 }
